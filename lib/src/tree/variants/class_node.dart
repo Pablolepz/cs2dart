@@ -3,17 +3,19 @@ import 'dart:io';
 import '../node.dart';
 
 class ClassNode implements Node {
-  
+
   ClassNode(
     this._value,
-    this._children
+    this._lChild,
+    this._rChild
   ): super();
 
   static final NodeType _type = NodeType.classLiteral;
   final String _value;
-  final List<Node> _children;
+  final Node _lChild;
+  final Node _rChild;
 
-  @override 
+  @override
   NodeType get type {
     assert(_type == NodeType.classLiteral);
     return _type;
@@ -25,7 +27,10 @@ class ClassNode implements Node {
   }
 
   @override
-  List<Node> get children {
-    return _children;
+  Node get lChild {
+    return _lChild;
+  }
+  Node get rChild {
+    return _rChild;
   }
 }

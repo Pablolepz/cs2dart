@@ -12,12 +12,14 @@ abstract class Node {
   Node(
     this._type,
     this._value,
-    this._children
+    this._lChild,
+    this._rChild
   );
 
   final NodeType _type;
   final String _value;
-  final List<Node> _children;
+  final Node _lChild;
+  final Node _rChild;
 
 
   NodeType get type {
@@ -28,7 +30,10 @@ abstract class Node {
     return _value;
   }
 
-  List<Node> get children {
-    return _children;
+  Node get lChild {
+    return _lChild;
+  }
+  Node get rChild {
+    return _rChild;
   }
 }

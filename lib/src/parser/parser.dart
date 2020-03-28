@@ -1,21 +1,22 @@
 import 'package:cs2dart/parser.dart';
 import 'package:cs2dart/tokens.dart';
 import 'package:cs2dart/expressions.dart';
+import 'package:cs2dart/statement.dart';
+import 'package:cs2dart/tree.dart';
 
 import 'dart:io';
-
-import '../../parser.dart';
-import '../../parser.dart';
-import '../../parser.dart';
-import '../../parser.dart';
 import '../../parser.dart';
 import '../tokens/variants/integer_literal_token.dart';
 import '../tokens/variants/operator_or_punctuator_token.dart';
 
 class Parser {
   Parser(this._tokens);
-
   final List<Token> _tokens;
+  int _position;
+
+  void _next() {
+    _position++;
+  }
   // int _position = 0;
 
   // Token peek(int offset) {
@@ -32,7 +33,7 @@ class Parser {
       throw ParseException('Expected: ' + input.toString() + 'Received: ' + _tokens[position].toString());
     }
   }
-  
+
   // ParseResult parseAdditiveExpHelper(final int startPos){
   //   final List<Exp> resultList  = new List<Exp>;
   //   int curPos = startPos;
@@ -79,7 +80,7 @@ class Parser {
     if (result != null) {
       return result;
     }
-    
+
     else {
       throw ParseException('Unrecognized token in parser.');
     }
@@ -99,5 +100,57 @@ class Parser {
       stdout.writeln('$e');
       exit(1);
     }
+  }
+
+
+  //Statements
+
+
+  StatementNode parseStatementStart(int startPos) {
+    var currPos = startPos;
+    //labeled_statement
+    if (_tokens[currPos].type is IdentifierToken)
+    {
+      Node rightC = parseStatementLabeled(currPos++);
+      return StatementNode(_tokens[currPos].value, null, rightC);
+    }
+
+    //declaration_statement
+    // if (_tokens[currPos].type is )
+    // Node rightC = parseStatementDeclaration(currPos++);)
+    //
+    // return StatementNode(_tokens[currPos].value, null, rightC);
+
+    //empty_statement
+    if (_tokens[currPos].value == ';')
+    {
+      return StatementNode(_tokens[currPos].value, null, null);
+    }
+
+    //embedded_statement
+    if (_tokens[currPos].type == KeywordToken)
+    {
+      Node rightC = parseStatementEmbedded(currPos);
+      return StatementNode(_tokens[currPos].value, null, rightC);
+    }
+  }
+
+  StatementNode parseStatementLabeled(int startPos) {
+    var currPos = startPos;
+    if (_tokens[currPos].value == ':')
+    {
+      return StatementNode(_tokens[currPos].value, null, parseStatementStart(currPos++));
+    }
+  }
+
+  StatementNode parseStatementDeclaration(int startPos) {
+    var currPos = startPos;
+    // variable parsing required
+  }
+
+  StatementNode parseStatementEmbedded(int startPos) {
+    var currPos = startPos;
+    
+
   }
 }
